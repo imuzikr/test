@@ -233,156 +233,122 @@ function animate() {
     animationId = requestAnimationFrame(animate);
 }
 
-// 퀴즈 관련 변수들
+// 퀴즈 상태 및 함수 전역 선언
 let currentQuestionIndex = 0;
 let selectedAnswer = null;
 let score = 0;
-
 const quizQuestions = [
     {
-        question: "돌턴의 원자론에서 원자에 대한 설명으로 올바른 것은?",
+        question: '돌턴의 원자론에서 원자에 대한 설명으로 올바른 것은?',
         options: [
-            "원자는 더 이상 나눌 수 없는 가장 작은 입자이다",
-            "원자는 전자와 양성자로 구성되어 있다",
-            "원자는 항상 움직이고 있다",
-            "원자는 보이지 않지만 존재한다"
+            '원자는 더 이상 나눌 수 없는 가장 작은 입자이다',
+            '원자는 전자와 양성자로 구성되어 있다',
+            '원자는 항상 움직이고 있다',
+            '원자는 보이지 않지만 존재한다'
         ],
         correct: 0
     },
     {
-        question: "같은 원소의 원자들에 대한 돌턴의 설명은?",
+        question: '같은 원소의 원자들에 대한 돌턴의 설명은?',
         options: [
-            "질량과 성질이 모두 다르다",
-            "질량은 같지만 성질이 다르다",
-            "질량과 성질이 모두 동일하다",
-            "질량은 다르지만 성질이 같다"
+            '질량과 성질이 모두 다르다',
+            '질량은 같지만 성질이 다르다',
+            '질량과 성질이 모두 동일하다',
+            '질량은 다르지만 성질이 같다'
         ],
         correct: 2
     },
     {
-        question: "화학 반응에서 원자에 대한 돌턴의 설명은?",
+        question: '화학 반응에서 원자에 대한 돌턴의 설명은?',
         options: [
-            "원자는 생성되거나 파괴될 수 있다",
-            "원자는 재배열될 뿐 생성되거나 파괴되지 않는다",
-            "원자는 항상 분해된다",
-            "원자는 합쳐져서 새로운 원자가 된다"
+            '원자는 생성되거나 파괴될 수 있다',
+            '원자는 재배열될 뿐 생성되거나 파괴되지 않는다',
+            '원자는 항상 분해된다',
+            '원자는 합쳐져서 새로운 원자가 된다'
         ],
         correct: 1
     },
     {
-        question: "돌턴이 원자론을 발표한 연도는?",
+        question: '돌턴이 원자론을 발표한 연도는?',
         options: [
-            "1800년",
-            "1803년",
-            "1808년",
-            "1810년"
+            '1800년',
+            '1803년',
+            '1808년',
+            '1810년'
         ],
         correct: 1
     },
     {
-        question: "돌턴의 원자론이 화학에 미친 가장 큰 영향은?",
+        question: '돌턴의 원자론이 화학에 미친 가장 큰 영향은?',
         options: [
-            "원자의 존재를 증명했다",
-            "화학 반응의 정량적 설명을 가능하게 했다",
-            "원자의 구조를 밝혔다",
-            "전자의 존재를 발견했다"
+            '원자의 존재를 증명했다',
+            '화학 반응의 정량적 설명을 가능하게 했다',
+            '원자의 구조를 밝혔다',
+            '전자의 존재를 발견했다'
         ],
         correct: 1
     }
 ];
 
-// 퀴즈 초기화
-function initQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    selectedAnswer = null;
-    showQuestion();
-}
-
-// 질문 표시
 function showQuestion() {
-    const question = quizQuestions[currentQuestionIndex];
-    
+    const q = quizQuestions[currentQuestionIndex];
     document.getElementById('current-question').textContent = currentQuestionIndex + 1;
     document.getElementById('total-questions').textContent = quizQuestions.length;
-    document.getElementById('question-text').textContent = question.question;
-    
+    document.getElementById('question-text').textContent = q.question;
     const optionsContainer = document.getElementById('quiz-options');
     optionsContainer.innerHTML = '';
-    
-    question.options.forEach((option, index) => {
-        const optionElement = document.createElement('div');
-        optionElement.className = 'quiz-option';
-        optionElement.textContent = option;
-        optionElement.addEventListener('click', () => selectAnswer(index));
-        optionsContainer.appendChild(optionElement);
+    q.options.forEach((option, idx) => {
+        const div = document.createElement('div');
+        div.className = 'quiz-option';
+        div.textContent = option;
+        div.onclick = function() { selectAnswer(idx); };
+        optionsContainer.appendChild(div);
     });
-    
+    selectedAnswer = null;
     document.getElementById('submit-answer').disabled = true;
+    document.getElementById('submit-answer').style.display = 'inline-block';
     document.getElementById('next-question').style.display = 'none';
     document.getElementById('quiz-result').style.display = 'none';
 }
 
-// 답변 선택
-function selectAnswer(index) {
-    selectedAnswer = index;
-    
-    // 모든 옵션에서 선택 상태 제거
-    document.querySelectorAll('.quiz-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-    
-    // 선택된 옵션에 선택 상태 추가
-    document.querySelectorAll('.quiz-option')[index].classList.add('selected');
-    
+function selectAnswer(idx) {
+    selectedAnswer = idx;
+    document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+    document.querySelectorAll('.quiz-option')[idx].classList.add('selected');
     document.getElementById('submit-answer').disabled = false;
 }
 
-// 답변 제출
 function submitAnswer() {
     if (selectedAnswer === null) return;
-    
-    const question = quizQuestions[currentQuestionIndex];
-    const isCorrect = selectedAnswer === question.correct;
-    
-    if (isCorrect) {
-        score++;
-    }
-    
-    const resultElement = document.getElementById('quiz-result');
-    resultElement.style.display = 'block';
-    resultElement.className = isCorrect ? 'result-correct' : 'result-incorrect';
-    resultElement.textContent = isCorrect ? '정답입니다! 🎉' : `틀렸습니다. 정답은: ${question.options[question.correct]}`;
-    
+    const q = quizQuestions[currentQuestionIndex];
+    const isCorrect = selectedAnswer === q.correct;
+    if (isCorrect) score++;
+    const result = document.getElementById('quiz-result');
+    result.style.display = 'block';
+    result.className = isCorrect ? 'result-correct' : 'result-incorrect';
+    result.textContent = isCorrect ? '정답입니다! 🎉' : `틀렸습니다. 정답: ${q.options[q.correct]}`;
     document.getElementById('submit-answer').style.display = 'none';
     document.getElementById('next-question').style.display = 'inline-block';
 }
 
-// 다음 문제
 function nextQuestion() {
     currentQuestionIndex++;
-    
     if (currentQuestionIndex < quizQuestions.length) {
         showQuestion();
-        document.getElementById('submit-answer').style.display = 'inline-block';
     } else {
         showQuizResult();
     }
 }
 
-// 퀴즈 결과 표시
 function showQuizResult() {
     const quizContainer = document.querySelector('.quiz-container');
-    const percentage = Math.round((score / quizQuestions.length) * 100);
-    
+    const percent = Math.round((score / quizQuestions.length) * 100);
     quizContainer.innerHTML = `
         <h2>퀴즈 완료!</h2>
         <div class="quiz-result-final">
-            <h3>점수: ${score}/${quizQuestions.length} (${percentage}%)</h3>
-            <p>${percentage >= 80 ? '훌륭합니다! 돌턴의 원자론을 잘 이해하고 있습니다.' : 
-                percentage >= 60 ? '좋습니다! 조금 더 공부하면 완벽할 것입니다.' : 
-                '기본 개념을 다시 한번 복습해보세요.'}</p>
-            <button onclick="initQuiz()" style="margin-top: 20px; padding: 12px 30px; background: linear-gradient(145deg, #667eea, #764ba2); color: white; border: none; border-radius: 25px; cursor: pointer;">다시 시작</button>
+            <h3>점수: ${score}/${quizQuestions.length} (${percent}%)</h3>
+            <p>${percent >= 80 ? '훌륭합니다! 원자 구조를 잘 이해하고 있습니다.' : percent >= 60 ? '좋아요! 조금 더 복습해보세요.' : '기본 개념을 다시 복습해보세요.'}</p>
+            <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 30px; background: linear-gradient(145deg, #74b9ff, #a29bfe); color: white; border: none; border-radius: 25px; cursor: pointer;">다시 시작</button>
         </div>
     `;
 }
@@ -468,6 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const z = parseInt(document.getElementById('atomic-number').value);
                 drawBohrAtom(z);
             }
+            // 퀴즈 탭이 활성화될 때마다 퀴즈 초기화
+            if (targetSection === 'quiz') {
+                currentQuestionIndex = 0;
+                score = 0;
+                showQuestion();
+            }
         });
     });
 
@@ -479,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 최초 1번 그리기
     drawBohrAtom(1);
 
-    // 퀴즈
+    // 퀴즈 이벤트 연결
     document.getElementById('submit-answer').addEventListener('click', submitAnswer);
     document.getElementById('next-question').addEventListener('click', nextQuestion);
     showQuestion();
