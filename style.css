@@ -1,0 +1,151 @@
+@keyframes pulse-slow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s infinite ease-in-out;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+    animation-delay: 0.4s;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f7f2; /* Light background */
+    color: #333;
+}
+
+.section-title {
+    font-size: 2.5rem; /* Larger for impact */
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.section-subtitle {
+    font-size: 1.25rem; /* Slightly larger */
+    color: #7f8c8d;
+    margin-bottom: 3rem;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.nav-link {
+    transition: color 0.3s;
+    /* Removed border-bottom for a cleaner look as per image */
+    /* Removed padding-bottom as it's not needed without border */
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #8a2be2; /* Purple color for hover/active */
+    /* Removed border-bottom-color as it's not present */
+}
+
+.timeline-wrapper {
+    position: relative;
+    padding-top: 2rem; /* Space for the top circle */
+    padding-bottom: 2rem; /* Space for the bottom circle */
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #aed6f1, #3498db, #2874a6); /* Gradient line */
+    border-radius: 2px;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    position: relative;
+    z-index: 10; /* Ensure items are above the line */
+    /* Adjust positioning for two-column layout */
+    margin-left: auto; /* For right side on desktop */
+    margin-right: auto; /* For left side on desktop */
+    max-width: 45%; /* Control width on desktop */
+}
+
+/* Specific styling for left/right alignment on medium and larger screens */
+@media (min-width: 768px) {
+    .timeline-item:nth-child(odd) {
+        margin-right: calc(50% + 20px); /* Push left item to the left of the line */
+        text-align: right;
+    }
+    .timeline-item:nth-child(even) {
+        margin-left: calc(50% + 20px); /* Push right item to the right of the line */
+        text-align: left;
+    }
+}
+
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: #3498db;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    z-index: 11;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+/* Position circles on the timeline line */
+@media (min-width: 768px) {
+    .timeline-item:nth-child(odd)::before {
+        left: calc(50% - 10px); /* Align to center line */
+        margin-left: -30px; /* Offset to left of line */
+    }
+    .timeline-item:nth-child(even)::before {
+        left: calc(50% - 10px); /* Align to center line */
+        margin-left: 30px; /* Offset to right of line */
+    }
+}
+
+
+.timeline-item.active {
+    border-color: #3498db;
+    box-shadow: 0 15px 25px -5px rgba(52, 152, 219, 0.3), 0 6px 10px -3px rgba(52, 152, 219, 0.15);
+    transform: translateY(-8px);
+}
+
+.control-button {
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.control-button:hover {
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+.control-button:active {
+    transform: scale(0.95);
+    box-shadow: none;
+}
+
+canvas {
+    touch-action: none;
+    display: block; /* Ensure no extra space below canvas */
+    max-width: 100%; /* Make canvas responsive within its container */
+    height: auto; /* Maintain aspect ratio */
+}

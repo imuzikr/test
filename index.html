@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>원자구조_1</title>
+  <link rel='stylesheet' href='https://cdn.tailwindcss.com'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대화형 원자 구조 학습</title>
+    <!-- Tailwind CSS CDN은 Codepen CSS 설정에 추가합니다. -->
+    <!-- Chart.js CDN은 Codepen JS 설정에 추가합니다. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800 flex items-center">
+                <span class="text-purple-600 text-2xl mr-2">⚛️</span> 원자 구조 탐험
+            </h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#timeline" class="nav-link text-gray-600 font-medium hover:text-purple-700">원자 모형의 변천사</a>
+                <a href="#explorer" class="nav-link text-gray-600 font-medium hover:text-purple-700">원자 내부 탐험</a>
+                <a href="#builder" class="nav-link text-gray-600 font-medium hover:text-purple-700">나만의 원자 만들기</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 bg-white shadow-inner">
+            <a href="#timeline" class="block py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-md px-3">원자 모형의 변천사</a>
+            <a href="#explorer" class="block py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-md px-3">원자 내부 탐험</a>
+            <a href="#builder" class="block py-2 text-gray-700 font-medium hover:bg-gray-50 rounded-md px-3">나만의 원자 만들기</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16">
+        <section id="hero" class="text-center py-20 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-xl mb-16">
+            <h2 class="text-5xl md:text-6xl font-extrabold text-blue-800 leading-tight">세상은 무엇으로 이루어져 있을까?</h2>
+            <p class="mt-6 text-xl text-blue-700 max-w-4xl mx-auto">
+                모든 물질을 계속해서 쪼개면 무엇이 남을까요? 이 질문에서 시작된 위대한 여정, <br class="hidden sm:inline">'원자'의 세계로 여러분을 초대합니다.
+                대화형 탐험을 통해 원자의 비밀을 직접 파헤쳐 보세요.
+            </p>
+            <a href="#timeline" class="mt-10 inline-block bg-blue-600 text-white text-lg font-semibold px-8 py-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                탐험 시작하기 👇
+            </a>
+        </section>
+
+        <section id="timeline" class="py-16">
+            <h2 class="section-title">원자 모형의 변천사</h2>
+            <p class="section-subtitle">
+                과학자들은 눈에 보이지 않는 원자를 어떻게 상상했을까요? 각 시대를 대표하는 과학자를 클릭하여 원자 모형이 어떻게 발전했는지 알아보세요.
+            </p>
+            <div class="relative timeline-wrapper">
+                <div class="timeline-line"></div>
+                <div id="timeline-container" class="space-y-16 md:space-y-0">
+                </div>
+            </div>
+        </section>
+
+        <section id="explorer" class="py-16 bg-white rounded-xl shadow-xl mt-16 p-8 md:p-12">
+            <h2 class="section-title">원자 내부 탐험</h2>
+            <p class="section-subtitle">
+                원자는 더 작은 입자들로 이루어져 있습니다. 아래 그림의 원자핵이나 전자를 클릭하여 각 입자의 특징을 자세히 알아보세요.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div id="atom-diagram" class="relative w-full max-w-md mx-auto h-96 flex items-center justify-center">
+                    <!-- Electron Hotspot (larger, transparent background to allow nucleus clicks, lower z-index) -->
+                    <div id="electron-hotspot" class="absolute w-80 h-80 border-2 border-dashed border-blue-400 rounded-full cursor-pointer flex items-center justify-center text-blue-800 font-bold transition-transform duration-300 hover:scale-105 bg-transparent z-0">
+                        <span class="absolute top-1/2 -translate-y-1/2 right-0 -mr-3 w-6 h-6 bg-blue-500 rounded-full animate-pulse-slow"></span>
+                        <span class="absolute top-10 left-10 w-6 h-6 bg-blue-500 rounded-full animate-pulse-slow animation-delay-200"></span>
+                        <span class="absolute bottom-10 right-10 w-6 h-6 bg-blue-500 rounded-full animate-pulse-slow animation-delay-400"></span>
+                        <span class="text-xl mt-40">전자<br>(클릭!)</span>
+                    </div>
+                    <!-- Nucleus Hotspot (higher z-index to be clickable) -->
+                    <div id="nucleus-hotspot" class="absolute w-32 h-32 bg-red-200/50 rounded-full cursor-pointer flex items-center justify-center text-center text-red-800 font-bold transition-transform duration-300 hover:scale-110 z-10 shadow-md">원자핵<br>(클릭!)</div>
+                </div>
+                <div id="particle-info" class="bg-blue-50 p-8 rounded-lg shadow-inner min-h-[300px] flex flex-col justify-center">
+                    <h3 id="info-title" class="text-3xl font-bold text-blue-800 mb-4">입자 정보</h3>
+                    <p id="info-description" class="text-gray-700 leading-relaxed">알고 싶은 입자를 클릭하세요. 원자핵을 클릭하면 양성자와 중성자에 대한 정보를, 전자를 클릭하면 전자에 대한 정보를 볼 수 있습니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="builder" class="py-16 mt-16">
+            <h2 class="section-title">나만의 원자 만들기</h2>
+            <p class="section-subtitle">
+                양성자, 중성자, 전자의 수를 조절하여 직접 원자를 만들어 보세요. 원자 번호와 질량수가 어떻게 변하는지, 어떤 원소가 만들어지는지 실시간으로 확인할 수 있습니다.
+            </p>
+            <div class="bg-white rounded-xl shadow-xl p-6 md:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 h-[450px] md:h-auto overflow-hidden relative">
+                        <canvas id="atomCanvas" width="400" height="400" class="max-w-full h-auto block"></canvas>
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            <div class="bg-red-50 p-4 rounded-lg text-center shadow-md">
+                                <p class="font-bold text-red-700 text-lg">양성자 (Proton)</p>
+                                <div class="flex items-center justify-center mt-3 space-x-4">
+                                    <button data-particle="protons" data-action="decrease" class="control-button bg-red-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-red-600 active:bg-red-700">-</button>
+                                    <span id="protons-count" class="text-4xl font-extrabold w-16 text-center text-red-800">1</span>
+                                    <button data-particle="protons" data-action="increase" class="control-button bg-red-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-red-600 active:bg-red-700">+</button>
+                                </div>
+                            </div>
+                             <div class="bg-gray-100 p-4 rounded-lg text-center shadow-md">
+                                <p class="font-bold text-gray-700 text-lg">중성자 (Neutron)</p>
+                                <div class="flex items-center justify-center mt-3 space-x-4">
+                                    <button data-particle="neutrons" data-action="decrease" class="control-button bg-gray-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-gray-600 active:bg-gray-700">-</button>
+                                    <span id="neutrons-count" class="text-4xl font-extrabold w-16 text-center text-gray-800">0</span>
+                                    <button data-particle="neutrons" data-action="increase" class="control-button bg-gray-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-gray-600 active:bg-gray-700">+</button>
+                                </div>
+                            </div>
+                             <div class="bg-blue-50 p-4 rounded-lg text-center shadow-md">
+                                <p class="font-bold text-blue-700 text-lg">전자 (Electron)</p>
+                                <div class="flex items-center justify-center mt-3 space-x-4">
+                                    <button data-particle="electrons" data-action="decrease" class="control-button bg-blue-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-blue-600 active:bg-blue-700">-</button>
+                                    <span id="electrons-count" class="text-4xl font-extrabold w-16 text-center text-blue-800">1</span>
+                                    <button data-particle="electrons" data-action="increase" class="control-button bg-blue-500 text-white rounded-full w-12 h-12 text-3xl font-bold flex items-center justify-center hover:bg-blue-600 active:bg-blue-700">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 p-8 rounded-lg shadow-inner">
+                            <h3 class="text-2xl font-bold text-indigo-800 mb-5 border-b pb-3 border-indigo-200">원자 정보 요약</h3>
+                            <div class="space-y-4 text-lg">
+                                <p><strong>원소:</strong> <span id="element-name" class="font-mono text-xl font-bold text-indigo-900">수소 (H)</span></p>
+                                <p><strong>원자 번호 (양성자 수):</strong> <span id="atomic-number" class="font-mono text-xl font-bold text-indigo-900">1</span></p>
+                                <p><strong>질량수 (양성자+중성자):</strong> <span id="mass-number" class="font-mono text-xl font-bold text-indigo-900">1</span></p>
+                                <p><strong>전하:</strong> <span id="charge" class="font-mono text-xl font-bold text-indigo-900">0</span></p>
+                                <p id="isotope-info" class="text-green-700 font-bold mt-4 text-xl h-7"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2025 대화형 원자 구조 학습. 모든 권리 보유.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<!-- partial -->
+  <script src='https://cdn.jsdelivr.net/npm/chart.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
