@@ -185,6 +185,7 @@ header p {
     border: 2px solid #dfe6e9;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    /* width, height는 지정하지 않음 */
 }
 #atom-info {
     text-align: center;
