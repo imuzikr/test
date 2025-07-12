@@ -388,6 +388,70 @@ function showQuizResult() {
 }
 
 // 이벤트 리스너 설정
+function drawBohrAtom(z) {
+    const bohrConfig = [2, 8, 18, 32, 32, 18, 8]; // K~Q껍질 최대 전자수
+    const elementNames = [
+        '', '수소', '헬륨', '리튬', '베릴륨', '붕소', '탄소', '질소', '산소', '플루오린', '네온',
+        '나트륨', '마그네슘', '알루미늄', '규소', '인', '황', '염소', '아르곤', '칼륨', '칼슘'
+    ];
+    const canvas = document.getElementById('atom-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // 전자 배치 계산
+    let remain = z;
+    let shells = [];
+    for (let i = 0; i < bohrConfig.length; i++) {
+        if (remain > 0) {
+            const n = Math.min(remain, bohrConfig[i]);
+            shells.push(n);
+            remain -= n;
+        } else {
+            shells.push(0);
+        }
+    }
+    // 원자핵
+    ctx.beginPath();
+    ctx.arc(200, 200, 30, 0, Math.PI * 2);
+    ctx.fillStyle = '#fdcb6e';
+    ctx.fill();
+    ctx.strokeStyle = '#e17055';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = '#2d3436';
+    ctx.textAlign = 'center';
+    ctx.fillText(z, 200, 205);
+    // 껍질 및 전자
+    for (let i = 0; i < shells.length; i++) {
+        if (shells[i] === 0) continue;
+        const r = 60 + i * 35;
+        ctx.beginPath();
+        ctx.arc(200, 200, r, 0, Math.PI * 2);
+        ctx.strokeStyle = '#74b9ff';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // 전자
+        for (let j = 0; j < shells[i]; j++) {
+            const angle = (2 * Math.PI / shells[i]) * j;
+            const ex = 200 + r * Math.cos(angle);
+            const ey = 200 + r * Math.sin(angle);
+            ctx.beginPath();
+            ctx.arc(ex, ey, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#0984e3';
+            ctx.fill();
+            ctx.strokeStyle = '#636e72';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    }
+    // 정보 표시
+    const name = elementNames[z] || `${z}번 원소`;
+    document.getElementById('atom-info').innerHTML = `<b>${name}</b> (원자번호 ${z})<br>전자 배치: ${shells.filter(n=>n>0).join(', ')}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // 네비게이션
     const navButtons = document.querySelectorAll('.nav-btn');
@@ -407,73 +471,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 시뮬레이션: 원자 구조 그리기
-    const bohrConfig = [2, 8, 18, 32, 32, 18, 8]; // K~Q껍질 최대 전자수
-    const elementNames = [
-        '', '수소', '헬륨', '리튬', '베릴륨', '붕소', '탄소', '질소', '산소', '플루오린', '네온',
-        '나트륨', '마그네슘', '알루미늄', '규소', '인', '황', '염소', '아르곤', '칼륨', '칼슘'
-    ];
+    // 시뮬레이션: 원자 구조 그리기 버튼
     document.getElementById('draw-atom').addEventListener('click', () => {
         const z = parseInt(document.getElementById('atomic-number').value);
         drawBohrAtom(z);
     });
-    function drawBohrAtom(z) {
-        const canvas = document.getElementById('atom-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // 전자 배치 계산
-        let remain = z;
-        let shells = [];
-        for (let i = 0; i < bohrConfig.length; i++) {
-            if (remain > 0) {
-                const n = Math.min(remain, bohrConfig[i]);
-                shells.push(n);
-                remain -= n;
-            } else {
-                shells.push(0);
-            }
-        }
-        // 원자핵
-        ctx.beginPath();
-        ctx.arc(200, 200, 30, 0, Math.PI * 2);
-        ctx.fillStyle = '#fdcb6e';
-        ctx.fill();
-        ctx.strokeStyle = '#e17055';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.font = 'bold 18px Arial';
-        ctx.fillStyle = '#2d3436';
-        ctx.textAlign = 'center';
-        ctx.fillText(z, 200, 205);
-        // 껍질 및 전자
-        for (let i = 0; i < shells.length; i++) {
-            if (shells[i] === 0) continue;
-            const r = 60 + i * 35;
-            ctx.beginPath();
-            ctx.arc(200, 200, r, 0, Math.PI * 2);
-            ctx.strokeStyle = '#74b9ff';
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([5, 5]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            // 전자
-            for (let j = 0; j < shells[i]; j++) {
-                const angle = (2 * Math.PI / shells[i]) * j;
-                const ex = 200 + r * Math.cos(angle);
-                const ey = 200 + r * Math.sin(angle);
-                ctx.beginPath();
-                ctx.arc(ex, ey, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#0984e3';
-                ctx.fill();
-                ctx.strokeStyle = '#636e72';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
-        }
-        // 정보 표시
-        const name = elementNames[z] || `${z}번 원소`;
-        document.getElementById('atom-info').innerHTML = `<b>${name}</b> (원자번호 ${z})<br>전자 배치: ${shells.filter(n=>n>0).join(', ')}`;
-    }
     // 최초 1번 그리기
     drawBohrAtom(1);
 
