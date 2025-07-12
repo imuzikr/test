@@ -302,56 +302,21 @@ function drawBohrAtom(z) {
 // 퀴즈 기능 (전역 변수/함수)
 // =========================
 let quizQuestions = [
-    {
-        question: '돌턴의 원자론에서 원자에 대한 설명으로 올바른 것은?',
-        options: [
-            '원자는 더 이상 나눌 수 없는 가장 작은 입자이다',
-            '원자는 전자와 양성자로 구성되어 있다',
-            '원자는 항상 움직이고 있다',
-            '원자는 보이지 않지만 존재한다'
-        ],
-        correct: 0
-    },
-    {
-        question: '같은 원소의 원자들에 대한 돌턴의 설명은?',
-        options: [
-            '질량과 성질이 모두 다르다',
-            '질량은 같지만 성질이 다르다',
-            '질량과 성질이 모두 동일하다',
-            '질량은 다르지만 성질이 같다'
-        ],
-        correct: 2
-    },
-    {
-        question: '화학 반응에서 원자에 대한 돌턴의 설명은?',
-        options: [
-            '원자는 생성되거나 파괴될 수 있다',
-            '원자는 재배열될 뿐 생성되거나 파괴되지 않는다',
-            '원자는 항상 분해된다',
-            '원자는 합쳐져서 새로운 원자가 된다'
-        ],
-        correct: 1
-    },
-    {
-        question: '돌턴이 원자론을 발표한 연도는?',
-        options: [
-            '1800년',
-            '1803년',
-            '1808년',
-            '1810년'
-        ],
-        correct: 1
-    },
-    {
-        question: '돌턴의 원자론이 화학에 미친 가장 큰 영향은?',
-        options: [
-            '원자의 존재를 증명했다',
-            '화학 반응의 정량적 설명을 가능하게 했다',
-            '원자의 구조를 밝혔다',
-            '전자의 존재를 발견했다'
-        ],
-        correct: 1
-    }
+  {
+    question: '원자핵을 구성하는 입자는?',
+    options: ['양성자와 전자', '양성자와 중성자', '전자와 중성자', '양성자와 쿼크'],
+    correct: 1
+  },
+  {
+    question: 'Na(나트륨)의 전자 배치는?',
+    options: ['2, 8, 1', '2, 6, 3', '2, 8, 2', '2, 7, 2'],
+    correct: 0
+  },
+  {
+    question: '전자수와 원자번호의 관계는?',
+    options: ['항상 같다', '항상 다르다', '양성자수와 같다', '중성자수와 같다'],
+    correct: 2
+  }
 ];
 let currentQuestionIndex = 0;
 let selectedAnswer = null;
@@ -438,4 +403,46 @@ function enhanceAtomVisuals() {
 // 페이지 로드 완료 후 실행
 window.addEventListener('load', () => {
     enhanceAtomVisuals();
+}); 
+
+// =========================
+// DOMContentLoaded: 이벤트 연결 및 초기화
+// =========================
+document.addEventListener('DOMContentLoaded', () => {
+    // 네비게이션
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const contentSections = document.querySelectorAll('.content-section');
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetSection = button.getAttribute('data-section');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            contentSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(targetSection).classList.add('active');
+            // 시뮬레이션 탭이 활성화될 때마다 원자 구조 다시 그리기
+            if (targetSection === 'simulation') {
+                const z = parseInt(document.getElementById('atomic-number').value);
+                drawBohrAtom(z);
+            }
+            // 퀴즈 탭이 활성화될 때마다 퀴즈 초기화
+            if (targetSection === 'quiz') {
+                currentQuestionIndex = 0;
+                score = 0;
+                showQuestion();
+            }
+        });
+    });
+
+    // 시뮬레이션: 원자 구조 그리기 버튼
+    document.getElementById('draw-atom').addEventListener('click', () => {
+        const z = parseInt(document.getElementById('atomic-number').value);
+        drawBohrAtom(z);
+    });
+    // 최초 1번 그리기
+    drawBohrAtom(1);
+
+    // 퀴즈 이벤트 연결
+    document.getElementById('submit-answer').addEventListener('click', submitAnswer);
+    document.getElementById('next-question').addEventListener('click', nextQuestion);
+    showQuestion();
 }); 
