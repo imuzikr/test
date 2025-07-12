@@ -399,6 +399,11 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
             contentSections.forEach(section => section.classList.remove('active'));
             document.getElementById(targetSection).classList.add('active');
+            // 시뮬레이션 탭이 활성화될 때마다 원자 구조 다시 그리기
+            if (targetSection === 'simulation') {
+                const z = parseInt(document.getElementById('atomic-number').value);
+                drawBohrAtom(z);
+            }
         });
     });
 
