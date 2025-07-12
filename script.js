@@ -389,10 +389,9 @@ function showQuizResult() {
 
 // 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', () => {
-    // 네비게이션 버튼 및 섹션
+    // 네비게이션
     const navButtons = document.querySelectorAll('.nav-btn');
     const contentSections = document.querySelectorAll('.content-section');
-
     navButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetSection = button.getAttribute('data-section');
@@ -400,20 +399,160 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
             contentSections.forEach(section => section.classList.remove('active'));
             document.getElementById(targetSection).classList.add('active');
-            if (targetSection === 'simulation') initSimulation();
-            if (targetSection === 'quiz') initQuiz();
         });
     });
 
-    // 퀴즈 버튼 이벤트
+    // 시뮬레이션: 원자 구조 그리기
+    const bohrConfig = [2, 8, 18, 32, 32, 18, 8]; // K~Q껍질 최대 전자수
+    const elementNames = [
+        '', '수소', '헬륨', '리튬', '베릴륨', '붕소', '탄소', '질소', '산소', '플루오린', '네온',
+        '나트륨', '마그네슘', '알루미늄', '규소', '인', '황', '염소', '아르곤', '칼륨', '칼슘'
+    ];
+    document.getElementById('draw-atom').addEventListener('click', () => {
+        const z = parseInt(document.getElementById('atomic-number').value);
+        drawBohrAtom(z);
+    });
+    function drawBohrAtom(z) {
+        const canvas = document.getElementById('atom-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // 전자 배치 계산
+        let remain = z;
+        let shells = [];
+        for (let i = 0; i < bohrConfig.length; i++) {
+            if (remain > 0) {
+                const n = Math.min(remain, bohrConfig[i]);
+                shells.push(n);
+                remain -= n;
+            } else {
+                shells.push(0);
+            }
+        }
+        // 원자핵
+        ctx.beginPath();
+        ctx.arc(200, 200, 30, 0, Math.PI * 2);
+        ctx.fillStyle = '#fdcb6e';
+        ctx.fill();
+        ctx.strokeStyle = '#e17055';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.font = 'bold 18px Arial';
+        ctx.fillStyle = '#2d3436';
+        ctx.textAlign = 'center';
+        ctx.fillText(z, 200, 205);
+        // 껍질 및 전자
+        for (let i = 0; i < shells.length; i++) {
+            if (shells[i] === 0) continue;
+            const r = 60 + i * 35;
+            ctx.beginPath();
+            ctx.arc(200, 200, r, 0, Math.PI * 2);
+            ctx.strokeStyle = '#74b9ff';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            // 전자
+            for (let j = 0; j < shells[i]; j++) {
+                const angle = (2 * Math.PI / shells[i]) * j;
+                const ex = 200 + r * Math.cos(angle);
+                const ey = 200 + r * Math.sin(angle);
+                ctx.beginPath();
+                ctx.arc(ex, ey, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#0984e3';
+                ctx.fill();
+                ctx.strokeStyle = '#636e72';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+        // 정보 표시
+        const name = elementNames[z] || `${z}번 원소`;
+        document.getElementById('atom-info').innerHTML = `<b>${name}</b> (원자번호 ${z})<br>전자 배치: ${shells.filter(n=>n>0).join(', ')}`;
+    }
+    // 최초 1번 그리기
+    drawBohrAtom(1);
+
+    // 퀴즈
+    const quizQuestions = [
+        {
+            question: '원자핵을 구성하는 입자는?',
+            options: ['양성자와 전자', '양성자와 중성자', '전자와 중성자', '양성자와 쿼크'],
+            correct: 1
+        },
+        {
+            question: 'Na(나트륨)의 전자 배치는?',
+            options: ['2, 8, 1', '2, 6, 3', '2, 8, 2', '2, 7, 2'],
+            correct: 0
+        },
+        {
+            question: '전자수와 원자번호의 관계는?',
+            options: ['항상 같다', '항상 다르다', '양성자수와 같다', '중성자수와 같다'],
+            correct: 2
+        }
+    ];
+    let currentQuestionIndex = 0;
+    let selectedAnswer = null;
+    let score = 0;
+    function showQuestion() {
+        const q = quizQuestions[currentQuestionIndex];
+        document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+        document.getElementById('total-questions').textContent = quizQuestions.length;
+        document.getElementById('question-text').textContent = q.question;
+        const optionsContainer = document.getElementById('quiz-options');
+        optionsContainer.innerHTML = '';
+        q.options.forEach((option, idx) => {
+            const div = document.createElement('div');
+            div.className = 'quiz-option';
+            div.textContent = option;
+            div.addEventListener('click', () => selectAnswer(idx));
+            optionsContainer.appendChild(div);
+        });
+        document.getElementById('submit-answer').disabled = true;
+        document.getElementById('next-question').style.display = 'none';
+        document.getElementById('quiz-result').style.display = 'none';
+    }
+    function selectAnswer(idx) {
+        selectedAnswer = idx;
+        document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelectorAll('.quiz-option')[idx].classList.add('selected');
+        document.getElementById('submit-answer').disabled = false;
+    }
+    function submitAnswer() {
+        if (selectedAnswer === null) return;
+        const q = quizQuestions[currentQuestionIndex];
+        const isCorrect = selectedAnswer === q.correct;
+        if (isCorrect) score++;
+        const result = document.getElementById('quiz-result');
+        result.style.display = 'block';
+        result.className = isCorrect ? 'result-correct' : 'result-incorrect';
+        result.textContent = isCorrect ? '정답입니다! 🎉' : `틀렸습니다. 정답: ${q.options[q.correct]}`;
+        document.getElementById('submit-answer').style.display = 'none';
+        document.getElementById('next-question').style.display = 'inline-block';
+    }
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizQuestions.length) {
+            showQuestion();
+            document.getElementById('submit-answer').style.display = 'inline-block';
+        } else {
+            showQuizResult();
+        }
+    }
+    function showQuizResult() {
+        const quizContainer = document.querySelector('.quiz-container');
+        const percent = Math.round((score / quizQuestions.length) * 100);
+        quizContainer.innerHTML = `
+            <h2>퀴즈 완료!</h2>
+            <div class="quiz-result-final">
+                <h3>점수: ${score}/${quizQuestions.length} (${percent}%)</h3>
+                <p>${percent >= 80 ? '훌륭합니다! 원자 구조를 잘 이해하고 있습니다.' : percent >= 60 ? '좋아요! 조금 더 복습해보세요.' : '기본 개념을 다시 복습해보세요.'}</p>
+                <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 30px; background: linear-gradient(145deg, #74b9ff, #a29bfe); color: white; border: none; border-radius: 25px; cursor: pointer;">다시 시작</button>
+            </div>
+        `;
+    }
     document.getElementById('submit-answer').addEventListener('click', submitAnswer);
     document.getElementById('next-question').addEventListener('click', nextQuestion);
-
-    // 페이지 로드 시 이론 학습 섹션 활성화
-    document.getElementById('theory').classList.add('active');
-
-    // 원자 시각화 애니메이션 개선
-    enhanceAtomVisuals();
+    showQuestion();
 });
 
 // 원자 시각화 애니메이션 개선
