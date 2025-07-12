@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돌턴의 원자론 학습</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 돌턴의 원자론 학습</h1>
+            <p>존 돌턴의 원자론을 인터랙티브하게 학습해보세요!</p>
+        </header>
+
+        <nav class="navigation">
+            <button class="nav-btn active" data-section="theory">이론 학습</button>
+            <button class="nav-btn" data-section="simulation">원자 시뮬레이션</button>
+            <button class="nav-btn" data-section="quiz">퀴즈</button>
+            <button class="nav-btn" data-section="history">역사적 배경</button>
+        </nav>
+
+        <main>
+            <!-- 이론 학습 섹션 -->
+            <section id="theory" class="content-section active">
+                <h2>돌턴의 원자론 핵심 개념</h2>
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <h3>1. 원자의 존재</h3>
+                        <p>모든 물질은 더 이상 나눌 수 없는 작은 입자인 원자로 구성되어 있습니다.</p>
+                        <div class="atom-visual">
+                            <div class="atom-core"></div>
+                            <div class="electron" style="--delay: 0s"></div>
+                            <div class="electron" style="--delay: 1s"></div>
+                            <div class="electron" style="--delay: 2s"></div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h3>2. 원자의 동일성</h3>
+                        <p>같은 원소의 원자들은 질량과 성질이 동일합니다.</p>
+                        <div class="element-example">
+                            <div class="element-atom">H</div>
+                            <div class="element-atom">H</div>
+                            <div class="element-atom">H</div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h3>3. 화합물의 형성</h3>
+                        <p>원자들은 일정한 비율로 결합하여 화합물을 형성합니다.</p>
+                        <div class="compound-example">
+                            <div class="molecule">
+                                <span class="atom-h">H</span>
+                                <span class="bond">-</span>
+                                <span class="atom-o">O</span>
+                                <span class="bond">-</span>
+                                <span class="atom-h">H</span>
+                            </div>
+                            <p class="formula">H₂O (물)</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h3>4. 화학 반응</h3>
+                        <p>화학 반응에서 원자는 생성되거나 파괴되지 않고 재배열됩니다.</p>
+                        <div class="reaction-example">
+                            <div class="reactants">
+                                <span>2H₂ + O₂</span>
+                                <span class="arrow">→</span>
+                                <span>2H₂O</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 원자 시뮬레이션 섹션 -->
+            <section id="simulation" class="content-section">
+                <h2>원자 시뮬레이션</h2>
+                <div class="simulation-container">
+                    <div class="controls">
+                        <label for="element-select">원소 선택:</label>
+                        <select id="element-select">
+                            <option value="hydrogen">수소 (H)</option>
+                            <option value="helium">헬륨 (He)</option>
+                            <option value="carbon">탄소 (C)</option>
+                            <option value="oxygen">산소 (O)</option>
+                            <option value="nitrogen">질소 (N)</option>
+                        </select>
+                        <button id="add-atom">원자 추가</button>
+                        <button id="clear-atoms">모두 지우기</button>
+                    </div>
+                    <canvas id="atom-canvas" width="800" height="400"></canvas>
+                    <div class="simulation-info">
+                        <p>원자를 클릭하여 상호작용해보세요!</p>
+                        <div id="atom-count">원자 수: 0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 퀴즈 섹션 -->
+            <section id="quiz" class="content-section">
+                <h2>돌턴의 원자론 퀴즈</h2>
+                <div class="quiz-container">
+                    <div id="quiz-progress">
+                        <span id="current-question">1</span> / <span id="total-questions">5</span>
+                    </div>
+                    <div id="quiz-question">
+                        <h3 id="question-text">질문이 여기에 표시됩니다.</h3>
+                        <div id="quiz-options"></div>
+                    </div>
+                    <div class="quiz-controls">
+                        <button id="submit-answer" disabled>답변 제출</button>
+                        <button id="next-question" style="display: none;">다음 문제</button>
+                    </div>
+                    <div id="quiz-result" style="display: none;"></div>
+                </div>
+            </section>
+
+            <!-- 역사적 배경 섹션 -->
+            <section id="history" class="content-section">
+                <h2>역사적 배경</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">1803</div>
+                        <div class="timeline-content">
+                            <h3>돌턴의 원자론 발표</h3>
+                            <p>존 돌턴이 "화학철학의 새로운 체계"에서 원자론을 발표했습니다.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1808</div>
+                        <div class="timeline-content">
+                            <h3>원자량 표 발표</h3>
+                            <p>수소를 기준으로 한 상대적 원자량 표를 발표했습니다.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1810</div>
+                        <div class="timeline-content">
+                            <h3>화합물 법칙 정립</h3>
+                            <p>정비례 법칙, 배수 비례 법칙 등을 정립했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="historical-figure">
+                    <div class="figure-info">
+                        <h3>존 돌턴 (John Dalton)</h3>
+                        <p><strong>생년월일:</strong> 1766년 9월 6일</p>
+                        <p><strong>사망:</strong> 1844년 7월 27일</p>
+                        <p><strong>국적:</strong> 영국</p>
+                        <p><strong>주요 업적:</strong> 원자론의 창시자, 색맹 연구의 선구자</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2024 돌턴의 원자론 학습 앱 | 교육용 웹 애플리케이션</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
